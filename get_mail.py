@@ -3,6 +3,18 @@ import imaplib
 import email
 import datetime
 
+class Email():
+    body = None
+
+    def __init__(self, subject = "No subject", sender = "Unknown", recipient = "Unknown", date = "00.00.0000 00:00:00"):
+        self.subject = subject
+        self.sender = sender
+        self.recipient = recipient
+        self.date = date
+
+    def __str__(self):
+        return "Date: "+self.date + "\nFrom: "+self.sender + "\nTo: "+self.recipient + "\nSubject: "+self.subject + "\n\n" + str(self.body)
+
 def get_mails(username, password):
     host ="imap.gmail.com"
     mail = imaplib.IMAP4_SSL(host)
@@ -14,27 +26,24 @@ def get_mails(username, password):
     my_messages = [] # all messages
 
     for num in search_data[0].split():
-        email_data = {} # content of our message
         _, data = mail.fetch(num, "(RFC822)") # grab the correct message
         _,b = data[0] #[(_, b)] message in byte
 
         msg = email.message_from_bytes(b)
-        for header in ["subject", "to", "from", "date"]:     # print a message header
-            print("{}: {}".format(header, msg[header]))
-            email_data["header"] = msg["header"]
+        new_email = Email(msg["subject"], msg["from"], msg["to"], msg["date"]) # message header
         for part in msg.walk():
             if part.get_content_type() == "text/plain":
                 body = part.get_payload(decode = True) # plain text content of the message
-                print(body)
-                email_data["body"] = body
+                new_email.body = body.decode()
             elif part.get_content_type() == "text/html":
-                 html_body = part.get_payload(decode = True)
-                 print(html_body.decode())
-                 email_data["html_body"] = html_body
-        my_messages.append(email_data)
+                html_body = part.get_payload(decode = True)
+                new_email.body = html_body.decode()
+        my_messages.append(new_email)
 
     return my_messages
 
 if __name__ == '__main__':
     login, password = get_credentials()
     my_mails = get_mails(login, password)
+    for mail in my_mails:
+        print("-----------------------------------", mail, sep="\n")
