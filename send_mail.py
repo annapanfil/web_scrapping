@@ -30,8 +30,7 @@ def send_mail(subject="An email", text="Send by Python\nsss...",  to_email=None,
         try:
             server.sendmail(from_email, to_email, msg_str)
         except:
-            print ("Notsent")
-            raise "Not_sent"
+            raise Exception("Not_sent")
         server.quit()
 
 def get_credentials():
