@@ -2,7 +2,7 @@
 import requests
 from requests_html import HTML
 import re
-from pprint import pprint
+# from pprint import pprint
 from prettytable import PrettyTable
 
 
@@ -64,7 +64,7 @@ def find_data(date) -> tuple:
 
 if __name__ == "__main__":
     """ENTER YOUR TRANSACTIONS HERE"""
-    transactions = {"05-02-2021": {"Investor Obligacji": 500, "Investor zrównoważony":100, "nowych technologii":200}, "02-02-2021": {"Akcji spółek wzrostowych":1,"Investor Obligacji":10}}
+    transactions = {"19-01-2021": {"Investor Zrównoważony": 3.521375, "Investor Nowych technologii":11.014225}}
 
     all_funds = {}
     for trans in transactions.values():
